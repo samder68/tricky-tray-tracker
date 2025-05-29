@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +21,7 @@
       justify-content: center;
       background: #ddd;
       border-bottom: 2px solid #bbb;
+      flex-wrap: wrap;
     }
     .tab {
       padding: 1em;
@@ -69,13 +71,18 @@
       cursor: pointer;
     }
     .reset-container {
+  position: sticky;
+  bottom: 0;
+  background: #f7f7f7;
+  padding-bottom: 2em;
+
       text-align: center;
     }
   </style>
 </head>
 <body>
   <div style="text-align: center; margin-top: 1em;">
-    <img src="https://img1.wsimg.com/isteam/ip/44554942-9c85-49e4-be53-4a425c7831fb/Clifton%20Education%20Foundation%20Logo.jpg/:/rs=w:500,h:400,cg=true,m/cr=w:500,h:400/qt=q:95" style="width: 100px !important; height: auto !important; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px; background: white; padding: 0.5em;" alt="Clifton Education Foundation Logo" style="max-width: 200px; height: auto; display: block; margin: 0 auto 1em;" />
+    <img src="https://img1.wsimg.com/isteam/ip/44554942-9c85-49e4-be53-4a425c7831fb/Clifton%20Education%20Foundation%20Logo.jpg/:/rs=w:500,h:400,cg=true,m/cr=w:500,h:400/qt=q:95" style="width: 100px !important; height: auto !important; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px; background: white; padding: 0.5em;" alt="Clifton Education Foundation Logo" />
     <p><strong>Instructions:</strong><br>
     Tap a prize row to cross it off when it's called.<br>
     Tap the 🎟️ icon to mark which prizes you placed tickets in.<br>
@@ -90,344 +97,39 @@
     <button class="reset" onclick="resetAll()">Reset All</button>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script>
-    const prizes = [
-      { number: "1", name: "Christmas Wrapping", category: "Small" },
-      { number: "2", name: "4th of July", category: "Small" },
-      { number: "3", name: "Cleaning Basket", category: "Small" },
-      { number: "4", name: "Marvel Blanket", category: "Small" },
-      { number: "5", name: "Halloween Basket", category: "Small" },
-      { number: "6", name: "Cat Basket", category: "Small" },
-      { number: "7", name: "Plastic Kitchenware", category: "Small" },
-      { number: "8", name: "Honey Nails GCw/Bath and Body Works", category: "Small" },
-      { number: "9", name: "Plastic Kitchenware", category: "Small" },
-      { number: "10", name: "Kitchen Appliances", category: "Small" },
-      { number: "11", name: "Benihana GC w/Wine", category: "Small" },
-      { number: "12", name: "Football", category: "Small" },
-      { number: "13", name: "Taco Basket", category: "Small" },
-      { number: "14", name: "Gardening Basket", category: "Small" },
-      { number: "15", name: "Baking Basket", category: "Small" },
-      { number: "16", name: "Izzy-Ali Handbag", category: "Small" },
-      { number: "17", name: "Fancy Bowls", category: "Small" },
-      { number: "18", name: "Vegan Marshmallows", category: "Small" },
-      { number: "19", name: "Carwash Basket", category: "Small" },
-      { number: "20", name: "Green Bean Casserole", category: "Small" },
-      { number: "21", name: "Hot Grill", category: "Small" },
-      { number: "22", name: "Butterfly Basket", category: "Small" },
-      { number: "23", name: "Star Wars Blanket", category: "Small" },
-      { number: "24", name: "Isagenix Basket", category: "Small" },
-      { number: "25", name: "Easter Basket w/ Bromilow GC", category: "Small" },
-      { number: "26", name: "Bath Towels", category: "Small" },
-      { number: "27", name: "Red, White and Blue", category: "Small" },
-      { number: "28", name: "Melitta Coffee", category: "Small" },
-      { number: "29", name: "Mixing Bowls", category: "Small" },
-      { number: "30", name: "Harry Potter Stuffies", category: "Small" },
-      { number: "31", name: "Garden Basket", category: "Small" },
-      { number: "32", name: "Stop & Shop GC w/ Plates", category: "Small" },
-      { number: "33", name: "Cat Basket", category: "Small" },
-      { number: "34", name: "Cuisinart Hand Blender", category: "Small" },
-      { number: "35", name: "Kids' Books w/ Inflatable Bed", category: "Small" },
-      { number: "36", name: "Luna Wood Fire Tavern GC w/ Hangers", category: "Small" },
-      { number: "37", name: "Girl Jewelry Box", category: "Small" },
-      { number: "38", name: "Garden Basket", category: "Small" },
-      { number: "39", name: "Bath Towels w/ Rug", category: "Small" },
-      { number: "40", name: "Teacher Basket w/Staples GC", category: "Small" },
-      { number: "41", name: "Mickey & Minnie", category: "Small" },
-      { number: "42", name: "Fiina Nail Lounge GC", category: "Small" },
-      { number: "43", name: "Star Wars Blanket w/ Baby Yoda", category: "Small" },
-      { number: "44", name: "Wine w/ Glasses", category: "Small" },
-      { number: "45", name: "Lunar E-Clips GC", category: "Small" },
-      { number: "46", name: "Beer Pong", category: "Small" },
-      { number: "47", name: "Cuddle Me Cat", category: "Small" },
-      { number: "48", name: "Minerva Salon GC w/ Perfume", category: "Small" },
-      { number: "49", name: "Spring is in the Air", category: "Small" },
-      { number: "50", name: "Cubita Café GC w/ Hangers", category: "Small" },
-      { number: "51", name: "Snow Globe w/ Hat", category: "Small" },
-      { number: "52", name: "Model Cars", category: "Small" },
-      { number: "53", name: "Snowman Cookie Jar", category: "Small" },
-      { number: "54", name: "European Wax GC w/ Lotions", category: "Small" },
-      { number: "55", name: "Dump Truck w/ Blanket", category: "Small" },
-      { number: "56", name: "Hello Kitty Basket", category: "Small" },
-      { number: "57", name: "Columbian Nights GC w/ Puzzle", category: "Small" },
-      { number: "58", name: "Foot Care Basket", category: "Small" },
-      { number: "59", name: "Heated Throw", category: "Small" },
-      { number: "60", name: "Winter Basket", category: "Small" },
-      { number: "61", name: "Baking Basket", category: "Small" },
-      { number: "62", name: "Kids Snacks", category: "Small" },
-      { number: "63", name: "Care Bear", category: "Small" },
-      { number: "64", name: "4th of July", category: "Small" },
-      { number: "65", name: "Breakfast Basket", category: "Small" },
-      { number: "66", name: "Minerva Salon GC", category: "Small" },
-      { number: "67", name: "Halloween Basket", category: "Small" },
-      { number: "68", name: "Columbian Nights GC w/ Hat and Scarf", category: "Small" },
-      { number: "69", name: "Allwood Diner GC w/ Bowls", category: "Small" },
-      { number: "70", name: "Grand Saloon GC w/ Bowls", category: "Small" },
-      { number: "71", name: "Nino Tollis GC w/ Foot Care", category: "Small" },
-      { number: "72", name: "Love of Grub GC", category: "Small" },
-      { number: "73", name: "Popcorn Park Refuge", category: "Small" },
-      { number: "74", name: "Paper Products", category: "Small" },
-      { number: "75", name: "Girl Scout Cookies", category: "Small" },
-      { number: "76", name: "Gardening Basket", category: "Small" },
-      { number: "77", name: "Elmo School Bus", category: "Small" },
-      { number: "78", name: "PJ Masks", category: "Small" },
-      { number: "79", name: "Barnes & Noble GC w/ Puzzle", category: "Small" },
-      { number: "80", name: "Plush Blanket w/ Socks", category: "Small" },
-      { number: "81", name: "Dog Basket", category: "Small" },
-      { number: "82", name: "Kids Gardening Basket", category: "Small" },
-      { number: "83", name: "Overnight Bag", category: "Small" },
-      { number: "84", name: "Baking Basket", category: "Small" },
-      { number: "85", name: "Montclair Ice Arena", category: "Small" },
-      { number: "86", name: "Green Bean Casserole", category: "Small" },
-      { number: "87", name: "Dunkin GC w/ Coffee Maker", category: "Small" },
-      { number: "88", name: "Disney Basket", category: "Small" },
-      { number: "89", name: "Kids Cooking Basket", category: "Small" },
-      { number: "90", name: "Mr. Cupcakes GC w/ Kitchenware", category: "Small" },
-      { number: "91", name: "Mr. Coffee", category: "Small" },
-      { number: "92", name: "Kids Beach Basket", category: "Small" },
-      { number: "93", name: "Vintage Drink Dispenser", category: "Small" },
-      { number: "94", name: "Winter Sheets w/ Blanket", category: "Small" },
-      { number: "95", name: "Cuisinart Hand Mixer w/ Bowles", category: "Small" },
-      { number: "96", name: "Space Farms GC w/ Puzzles", category: "Small" },
-      { number: "97", name: "CHS Graduation", category: "Small" },
-      { number: "98", name: "Clifton Jewelers GC w/ Wallet", category: "Small" },
-      { number: "99", name: "Funtime Junction w/ Chips", category: "Small" },
-      { number: "100", name: "'Smores", category: "Small" },
-      { number: "101", name: "Fancy Bowls", category: "Small" },
-      { number: "102", name: "Snapware", category: "Small" },
-      { number: "103", name: "Ghost Hawk GC", category: "Small" },
-      { number: "104", name: "Time for Coffee Break", category: "Small" },
-      { number: "105", name: "Winnie the Pooh", category: "Small" },
-      { number: "106", name: "Marvel Blanket & Pillow", category: "Small" },
-      { number: "107", name: "Girls Crafts w/ Chips", category: "Small" },
-      { number: "108", name: "Jenkinson's Aquarium GC", category: "Small" },
-      { number: "109", name: "NY Giants Malik Nabers", category: "Small" },
-      { number: "110", name: "Imagine That!!! GC", category: "Small" },
-      { number: "111", name: "Digital Picture Frame w/ Mini Google Home", category: "Small" },
-      { number: "112", name: "Academy of Natural Science w/Books", category: "Small" },
-      { number: "113", name: "Nino Tollis GC w/ Perfume", category: "Small" },
-      { number: "114", name: "Clifton Village Pizza w/ Puzzles", category: "Small" },
-      { number: "115", name: "Kids' Crafts", category: "Small" },
-      { number: "116", name: "Baby Basket", category: "Small" },
-      { number: "117", name: "Dr. Seuss", category: "Small" },
-      { number: "118", name: "Kids' Books w/ Stuffies", category: "Small" },
-      { number: "119", name: "Styertowne Bakery", category: "Small" },
-      { number: "120", name: "Morris Museum", category: "Small" },
-      { number: "121", name: "Air Fryer", category: "Small" },
-      { number: "122", name: "Willowbrook Golf Center – 4 Rounds of Miniature Golf", category: "Small" },
-      { number: "123", name: "Muscle Maker Grill GC", category: "Small" },
-      { number: "124", name: "Chivas Regal Gift Box", category: "Small" },
-      { number: "125", name: "House Plant", category: "Small" },
-      { number: "126", name: "Orchid Plant", category: "Small" },
-      { number: "127", name: "Summer Fun Basket", category: "Small" },
-      { number: "128", name: "Back to School Basket", category: "Small" },
-      { number: "129", name: "Wine & Lottery Scratch offs", category: "Small" },
-      { number: "130", name: "The Savannah Bananas T-Shirt & koozie", category: "Small" },
-      { number: "1", name: "Olive Bistro w/ Fast Pizza GC", category: "Medium" },
-      { number: "2", name: "My Life Dolls", category: "Medium" },
-      { number: "3", name: "Baking Basket", category: "Medium" },
-      { number: "4", name: "Heatwave LAX w/ Mini Lacrosse Set", category: "Medium" },
-      { number: "5", name: "NY Giants Malik Nabers", category: "Medium" },
-      { number: "6", name: "12\" Kids Bike", category: "Medium" },
-      { number: "7", name: "Coffee To Go", category: "Medium" },
-      { number: "8", name: "Columbian Nights GC w/ Blanket", category: "Medium" },
-      { number: "9", name: "Jersey Mike's Catering Box", category: "Medium" },
-      { number: "10", name: "Yoda w/Blanket", category: "Medium" },
-      { number: "11", name: "Melitta Coffee", category: "Medium" },
-      { number: "12", name: "Spin Mop w/Cleaning Supplies", category: "Medium" },
-      { number: "13", name: "Dog Basket", category: "Medium" },
-      { number: "14", name: "Shag86 GC", category: "Medium" },
-      { number: "15", name: "Monster Golf Bucket", category: "Medium" },
-      { number: "16", name: "Agamies GC w/ Garden Basket", category: "Medium" },
-      { number: "17", name: "Legos w/Monmouth Museum", category: "Medium" },
-      { number: "18", name: "NY Jets", category: "Medium" },
-      { number: "19", name: "Cheesecake Factory GC w/ Cake Plate", category: "Medium" },
-      { number: "20", name: "Land of Make-Believe GC", category: "Medium" },
-      { number: "21", name: "Lottery Scratch Offs", category: "Medium" },
-      { number: "22", name: "Teacher Basket", category: "Medium" },
-      { number: "23", name: "Crafting Supplies", category: "Medium" },
-      { number: "24", name: "Christmas Basket", category: "Medium" },
-      { number: "25", name: "Baking Basket", category: "Medium" },
-      { number: "26", name: "Christmas Basket", category: "Medium" },
-      { number: "27", name: "Cuisinart Chopper w/Containers", category: "Medium" },
-      { number: "28", name: "Alexus Steakhouse GC w/ Auto Safety Kit", category: "Medium" },
-      { number: "29", name: "J. Alexanders GC", category: "Medium" },
-      { number: "30", name: "JK Realty Wine Basket", category: "Medium" },
-      { number: "31", name: "Wine w/ Decanter", category: "Medium" },
-      { number: "32", name: "Paw Patrol", category: "Medium" },
-      { number: "33", name: "Olive Bistro & Fast Pizza GC", category: "Medium" },
-      { number: "34", name: "Cleaning Caddy w/Supplies", category: "Medium" },
-      { number: "35", name: "Diaper Bag w/ Baby Bullet", category: "Medium" },
-      { number: "36", name: "Italian Basket", category: "Medium" },
-      { number: "37", name: "Tommys Tavern GC", category: "Medium" },
-      { number: "38", name: "Il Posto w/Fast Pizza", category: "Medium" },
-      { number: "39", name: "Francesco's GC", category: "Medium" },
-      { number: "40", name: "Floor and Décor Bucket", category: "Medium" },
-      { number: "41", name: "Spiderman", category: "Medium" },
-      { number: "42", name: "Bella Napoli GC", category: "Medium" },
-      { number: "43", name: "Beverage Dispenser w/ Sonoma Bistro GC", category: "Medium" },
-      { number: "44", name: "Breakfast Basket", category: "Medium" },
-      { number: "45", name: "Chicago Uno GC w/ Salad Spinner", category: "Medium" },
-      { number: "46", name: "Baby Basket", category: "Medium" },
-      { number: "47", name: "Franklin Steak House, Wahizza and Olive Bistro GC", category: "Medium" },
-      { number: "48", name: "Kalahari - 2 Waterpark Day Passes", category: "Medium" },
-      { number: "49", name: "Bella Napoli GC", category: "Medium" },
-      { number: "50", name: "Kids Toys", category: "Medium" },
-      { number: "51", name: "B&G Club Bingo", category: "Medium" },
-      { number: "52", name: "Pool Toys", category: "Medium" },
-      { number: "53", name: "Harley Davidson", category: "Medium" },
-      { number: "54", name: "Edible Arrangements", category: "Medium" },
-      { number: "55", name: "Grand Lux Café GC", category: "Medium" },
-      { number: "56", name: "PF Chang's Willowbrook GC", category: "Medium" },
-      { number: "57", name: "Paper Products", category: "Medium" },
-      { number: "58", name: "Harley Davidson", category: "Medium" },
-      { number: "59", name: "Avon Basket", category: "Medium" },
-      { number: "60", name: "Family Movie Night", category: "Medium" },
-      { number: "61", name: "BJ's GC", category: "Medium" },
-      { number: "62", name: "Game Night", category: "Medium" },
-      { number: "63", name: "Franklin Steak House, Olive Bistro and Fast Pizza GC", category: "Medium" },
-      { number: "64", name: "Farberware Pots", category: "Medium" },
-      { number: "65", name: "Costco GC", category: "Medium" },
-      { number: "66", name: "Mr. Coffee w/ Snacks", category: "Medium" },
-      { number: "67", name: "Baking Basket", category: "Medium" },
-      { number: "68", name: "Harley Davidson", category: "Medium" },
-      { number: "69", name: "Nina's Hair Salon", category: "Medium" },
-      { number: "70", name: "Wool Blanket", category: "Medium" },
-      { number: "71", name: "Go Low Indoor Golf – ½ Hour Lesson", category: "Medium" },
-      { number: "72", name: "Wine Cooler w/ Wine", category: "Medium" },
-      { number: "73", name: "Sputino GC", category: "Medium" },
-      { number: "74", name: "Bruno's GC", category: "Medium" },
-      { number: "75", name: "Christmas Blankets w/ Basket", category: "Medium" },
-      { number: "76", name: "Infatuation Hair Salon GC", category: "Medium" },
-      { number: "77", name: "Amazing Lash GC", category: "Medium" },
-      { number: "78", name: "Weighted Blanket", category: "Medium" },
-      { number: "79", name: "Wine w/ Glasses", category: "Medium" },
-      { number: "80", name: "Snacks w/ AMC GC", category: "Medium" },
-      { number: "81", name: "Baby Basket", category: "Medium" },
-      { number: "82", name: "Baking Basket", category: "Medium" },
-      { number: "83", name: "Mr. Coffee w/ Snacks", category: "Medium" },
-      { number: "84", name: "Chicago Uno w/ Pasta", category: "Medium" },
-      { number: "85", name: "Hair Care Products", category: "Medium" },
-      { number: "86", name: "Costco GC w/ Glasses", category: "Medium" },
-      { number: "87", name: "Harley Davidson", category: "Medium" },
-      { number: "88", name: "Go Low Indoor Golf – Hour Sim Time", category: "Medium" },
-      { number: "89", name: "Lehigh Valley Zoo", category: "Medium" },
-      { number: "90", name: "NJ Jackals", category: "Medium" },
-      { number: "91", name: "Love for Lucas", category: "Medium" },
-      { number: "92", name: "Love for Lucas", category: "Medium" },
-      { number: "93", name: "Target GC", category: "Medium" },
-      { number: "94", name: "At Home GC", category: "Medium" },
-      { number: "95", name: "NY Rangers Tom Laidlaw", category: "Medium" },
-      { number: "96", name: "Taste of Tuscany GC", category: "Medium" },
-      { number: "97", name: "Clifton Recreation", category: "Medium" },
-      { number: "98", name: "Lenox Basket", category: "Medium" },
-      { number: "99", name: "Hot Grill GC w/ Hat and T-Shirt", category: "Medium" },
-      { number: "100", name: "Tony's Pizza Pasta Grill GC", category: "Medium" },
-      { number: "1", name: "Uncle Vinnie's Comedy Club", category: "Large" },
-      { number: "2", name: "Abundant Life Chiropractic", category: "Large" },
-      { number: "3", name: "It's Greek To Me", category: "Large" },
-      { number: "4", name: "Cleaning Supplies", category: "Large" },
-      { number: "5", name: "Summer Reading – Barnes & Noble GC", category: "Large" },
-      { number: "6", name: "Dog Basket", category: "Large" },
-      { number: "7", name: "Swarovski Earrings", category: "Large" },
-      { number: "8", name: "Salt Cavern", category: "Large" },
-      { number: "9", name: "Tuesta Soccer Camp – 1 Week", category: "Large" },
-      { number: "10", name: "Foot Massager", category: "Large" },
-      { number: "11", name: "Make Wine With Us", category: "Large" },
-      { number: "12", name: "Cast Iron Griddle and Pot", category: "Large" },
-      { number: "13", name: "Electric Wine Opener w/ Wine", category: "Large" },
-      { number: "14", name: "Margarita Maker w/ Glasses", category: "Large" },
-      { number: "15", name: "Tuesta Soccer Camp – 1 Week", category: "Large" },
-      { number: "16", name: "My Reading Era – Barnes & Noble GC", category: "Large" },
-      { number: "17", name: "Clifton Jewelers Bracelet", category: "Large" },
-      { number: "18", name: "Ninja Blender", category: "Large" },
-      { number: "19", name: "Cuisinart Griddle", category: "Large" },
-      { number: "20", name: "Brighton Asylum Basket", category: "Large" },
-      { number: "21", name: "Storybook Land w/ Books", category: "Large" },
-      { number: "22", name: "Matthew's GC", category: "Large" },
-      { number: "23", name: "V/O Med Spa", category: "Large" },
-      { number: "24", name: "Coach Wristlet w/ Scarf", category: "Large" },
-      { number: "25", name: "Stand Mixer", category: "Large" },
-      { number: "26", name: "Pressure Cooker", category: "Large" },
-      { number: "27", name: "Seton Hall – 4 Tickets - Men's Basketball", category: "Large" },
-      { number: "28", name: "Dutch Oven w/ Snapware", category: "Large" },
-      { number: "29", name: "Massage Envy", category: "Large" },
-      { number: "30", name: "Mr. Coffee w/ Snacks", category: "Large" },
-      { number: "31", name: "Boys & Girls Club Adult Swim", category: "Large" },
-      { number: "32", name: "Paper Products w/ Shop Rite GC", category: "Large" },
-      { number: "33", name: "Moxie Salon", category: "Large" },
-      { number: "34", name: "Agamies GC", category: "Large" },
-      { number: "35", name: "Kalahari – 4 Waterpark Passes", category: "Large" },
-      { number: "36", name: "Shop Rite GC", category: "Large" },
-      { number: "37", name: "Teacher Basket", category: "Large" },
-      { number: "38", name: "Kids Toys", category: "Large" },
-      { number: "39", name: "Bissell Multi-Surface Cleaner", category: "Large" },
-      { number: "40", name: "Italian Basket w/ Wine", category: "Large" },
-      { number: "41", name: "Triple Slow Cooker Buffet", category: "Large" },
-      { number: "42", name: "Cyclebar – 10 Rides", category: "Large" },
-      { number: "43", name: "Cooler w/ Sun Chairs and Snacks", category: "Large" },
-      { number: "44", name: "Moxie Salon", category: "Large" },
-      { number: "45", name: "Catch Air – Admission for 4", category: "Large" },
-      { number: "46", name: "Bronx Zoo – Admission for 4", category: "Large" },
-      { number: "47", name: "Treescape – 4 Climbing Tickets", category: "Large" },
-      { number: "48", name: "Row House – 10 Classes", category: "Large" },
-      { number: "49", name: "Step 2 Water Table", category: "Large" },
-      { number: "50", name: "Christmas Tree w/ Decorations", category: "Large" },
-      { number: "51", name: "T-Fal Ceramic Pots", category: "Large" },
-      { number: "52", name: "Handmade Seasonal Quilts", category: "Large" },
-      { number: "53", name: "Sensory Basket", category: "Large" },
-      { number: "54", name: "Lottery Scratch-Offs - $100", category: "Large" },
-      { number: "55", name: "Lottery Scratch-Offs - $150", category: "Large" },
-      { number: "56", name: "Coach Wallet w/ Shannon Rose GC", category: "Large" },
-      { number: "57", name: "Tod's Shoes – Women's Size 7", category: "Large" },
-      { number: "1", name: "Vizio 65\" Smart TV", category: "Grand" },
-      { number: "2", name: "Kalahari Resorts & Conventions – 1 Night Stay and Water Park - Suite for 6", category: "Grand" },
-      { number: "3", name: "Crystal Springs – Golf Sampler Package – 6 Rounds of Golf", category: "Grand" },
-      { number: "4", name: "Free Teeth Whitening – Dena Constandelis, DMD", category: "Grand" },
-      { number: "5", name: "Fantasy Island Amusement Park Passes w/Beach Cart, Sand Toys and Snacks", category: "Grand" },
-      { number: "6", name: "Free Tuition Scholarship – I.S.E.E. 2025 – Integrated Summer Enrichment Experience", category: "Grand" },
-      { number: "7", name: "NY Yankees vs LA Angels – 4 Tickets w/ Food Vouchers and Backpacks – June 18, 2025", category: "Grand" },
-      { number: "8", name: "Lottery Board - $250 in Scratch-Offs", category: "Grand" },
-      { number: "9", name: "Kindle colorsoft w/ cover", category: "Grand" },
-      { number: "10", name: "Blackstone Tabletop Grill with BBQ Utensils", category: "Grand" },
-      { number: "11", name: "Resorts World – 1 Night Stay", category: "Grand" },
-      { number: "12", name: "Elite Island Resorts – Panama – Los Establos Boutique Resort", category: "Grand" },
-      { number: "13", name: "Elite Island Resorts – Antigua – Galley Bay Resort & Spa", category: "Grand" },
-      { number: "14", name: "Elite Island Resorts – Antigua – Pineapple Beach Club", category: "Grand" },
-      { number: "15", name: "Elite Island Resorts – Antigua – St. James's Club", category: "Grand" },
-      { number: "16", name: "Elite Island Resorts – Antigua – The Verandah", category: "Grand" },
-      { number: "17", name: "Elite Island Resorts – Barbados – The Club Barbados", category: "Grand" },
-      { number: "18", name: "Elite Island Resorts – Antigua – Hammock Cove", category: "Grand" },
-      { number: "19", name: "One Free IV Vitamin Drip", category: "Grand" },
-      { number: "20", name: "One Free Botox Treatment Special 1st Anniversary Prize $1,000 $400 cash*$300 gift cards*$300 NJ Lottery scratch-offs", category: "Grand" }
-    ];
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRKyeFOBaHiZp_9ogODIY_AzicI73glIjYqlWqUyFWThWQXqh6C5aYZIoNsLRNHIUg0_s59jzNUoZsm/pub?output=csv";
+    let prizes = [];
 
     const tabsContainer = document.getElementById('tabs');
     const contentContainer = document.getElementById('content');
-    const categories = ["Small", "Medium", "Large", "Grand"];
     const sectionMap = {};
-
-    categories.forEach(category => {
-      const tab = document.createElement('div');
-      tab.className = 'tab';
-      tab.textContent = category;
-      tab.onclick = () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        sectionMap[category].classList.add('active');
-      };
-      tabsContainer.appendChild(tab);
-
-      const section = document.createElement('div');
-      section.id = `cat-${category}`;
-      section.className = 'category';
-      sectionMap[category] = section;
-      contentContainer.appendChild(section);
-    });
-
-    // In-memory storage instead of localStorage
     const crossedPrizes = new Set();
     const ticketPrizes = new Set();
+
+    function createTabs(categories) {
+      tabsContainer.innerHTML = "";
+      contentContainer.innerHTML = "";
+      categories.forEach(category => {
+        const tab = document.createElement('div');
+        tab.className = 'tab';
+        tab.textContent = category;
+        tab.onclick = () => {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
+          tab.classList.add('active');
+          sectionMap[category].classList.add('active');
+        };
+        tabsContainer.appendChild(tab);
+
+        const section = document.createElement('div');
+        section.id = `cat-${category}`;
+        section.className = 'category';
+        sectionMap[category] = section;
+        contentContainer.appendChild(section);
+      });
+    }
 
     function renderPrizes() {
       Object.values(sectionMap).forEach(section => section.innerHTML = "");
@@ -478,8 +180,8 @@
     }
 
     function resetCurrent() {
-      const activeCategory = document.querySelector('.category.active').id.replace('cat-', '');
-      if (confirm(`Reset all in the ${activeCategory} category?`)) {
+      const activeCategory = document.querySelector('.category.active')?.id.replace('cat-', '');
+      if (activeCategory && confirm(`Reset all in the ${activeCategory} category?`)) {
         prizes.forEach(prize => {
           if (prize.category === activeCategory) {
             const key = `${prize.category}-${prize.number}`;
@@ -488,7 +190,7 @@
           }
         });
         renderPrizes();
-        document.querySelector(`.tab.active`).click();
+        document.querySelector(`.tab.active`)?.click();
       }
     }
 
@@ -500,8 +202,30 @@
       }
     }
 
-    renderPrizes();
-    document.querySelectorAll('.tab')[0].click();
+    Papa.parse(sheetUrl, {
+      download: true,
+      header: true,
+      complete: function(results) {
+        const rawData = results.data;
+        const categoriesSet = new Set();
+        prizes = rawData.map(row => {
+          const number = row['Number']?.trim();
+          const name = row['Name']?.trim();
+          const category = row['Category']?.trim();
+          if (!number || !name || !category) return null;
+          categoriesSet.add(category);
+          return {
+            number,
+            name,
+            category
+          };
+        }).filter(Boolean);
+        const categories = Array.from(categoriesSet);
+        createTabs(categories);
+        renderPrizes();
+        document.querySelectorAll('.tab')[0]?.click();
+      }
+    });
   </script>
 </body>
 </html>
